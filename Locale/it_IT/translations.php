@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'Help on Mattermost integration' => 'Guida all\'integrazione con Mattermost',
+    'Help on Zulip integration' => 'Guida all\'integrazione con Zulip',
     // 'Channel/Group/User (Optional)' => '',
 );
 

@@ -1,4 +1,4 @@
-plugin=Mattermost
+plugin=Zulip
 
 all:
 	@ echo "Build archive for plugin ${plugin} version=${version}"

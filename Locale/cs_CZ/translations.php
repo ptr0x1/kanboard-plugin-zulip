@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'Help on Mattermost integration' => 'Nápověda pro Mattermost integraci.',
+    'Help on Zulip integration' => 'Nápověda pro Zulip integraci.',
     'Channel/Group/User (Optional)' => 'Kanál/Skupina/Uživatel (volitelně)',
 );
 

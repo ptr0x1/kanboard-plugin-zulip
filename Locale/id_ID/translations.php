@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'Help on Mattermost integration' => 'Bantuan pada integrasi Mattermost',
+    'Help on Zulip integration' => 'Bantuan pada integrasi Zulip',
     'Channel/Group/User (Optional)' => 'Kanal/Grup/Pengguna (pilihan)',
 );
 

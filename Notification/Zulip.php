@@ -1,17 +1,17 @@
 <?php
 
-namespace Kanboard\Plugin\Mattermost\Notification;
+namespace Kanboard\Plugin\Zulip\Notification;
 
 use Kanboard\Core\Base;
 use Kanboard\Core\Notification\NotificationInterface;
 
 /**
- * Mattermost Notification
+ * Zulip Notification
  *
  * @package  notification
- * @author   Frederic Guillot
+ * @author   Peter Fejer
  */
-class Mattermost extends Base implements NotificationInterface
+class Zulip extends Base implements NotificationInterface
 {
     /**
      * Send notification to a user
@@ -35,8 +35,8 @@ class Mattermost extends Base implements NotificationInterface
      */
     public function notifyProject(array $project, $event_name, array $event_data)
     {
-        $webhook = $this->projectMetadataModel->get($project['id'], 'mattermost_webhook_url', $this->configModel->get('mattermost_webhook_url'));
-        $channel = $this->projectMetadataModel->get($project['id'], 'mattermost_webhook_channel');
+        $webhook = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_url', $this->configModel->get('zulip_webhook_url'));
+        $channel = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_channel');
 
         if (! empty($webhook)) {
             $this->sendMessage($webhook, $channel, $project, $event_name, $event_data);
@@ -80,7 +80,7 @@ class Mattermost extends Base implements NotificationInterface
     }
 
     /**
-     * Send message to Mattermost
+     * Send message to Zulip
      *
      * @access private
      * @param  string    $webhook
