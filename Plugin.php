@@ -15,8 +15,10 @@ class Plugin extends Base
 {
     public function initialize()
     {
-        $this->template->hook->attach('template:config:integrations', 'zulip:config/integration');
         $this->template->hook->attach('template:project:integrations', 'zulip:project/integration');
+        $this->template->hook->attach('template:user:integrations', 'zulip:user/integration');
+
+        $this->userNotificationTypeModel->setType('zulip', 'Zulip', '\Kanboard\Plugin\Zulip\Notification\Zulip');
         $this->projectNotificationTypeModel->setType('zulip', t('Zulip'), '\Kanboard\Plugin\Zulip\Notification\Zulip');
     }
 
@@ -37,7 +39,7 @@ class Plugin extends Base
 
     public function getPluginVersion()
     {
-        return '1.0.0';
+        return '1.0.2';
     }
 
     public function getPluginHomepage()

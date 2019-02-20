@@ -23,6 +23,22 @@ class Zulip extends Base implements NotificationInterface
      */
     public function notifyUser(array $user, $eventName, array $eventData)
     {
+        $webhook = $this->userMetadataModel->get($user['id'], 'zulip_webhook_url', $this->configModel->get('zulip_webhook_url'));
+        $channel = $this->userMetadataModel->get($user['id'], 'zulip_webhook_channel');
+        $api_key = $this->userMetadataModel->get($user['id'], 'zulip_webhook_botapi');
+        $subject = $this->userMetadataModel->get($user['id'], 'zulip_webhook_subject');
+        if (! empty($webhook)) {
+            if ($eventName === TaskModel::EVENT_OVERDUE) {
+                foreach ($eventData['tasks'] as $task) {
+                    $project = $this->projectModel->getById($task['project_id']);
+                    $eventData['task'] = $task;
+                    $this->sendMessage($webhook, $channel, $project, $eventName, $eventData, $api_key, $subject);
+                }
+            } else {
+                $project = $this->projectModel->getById($eventData['task']['project_id']);
+                $this->sendMessage($webhook, $channel, $project, $eventName, $eventData, $api_key, $subject);
+            }
+        }
     }
 
     /**
@@ -52,6 +68,8 @@ class Zulip extends Base implements NotificationInterface
      * @param  array     $project
      * @param  string    $event_name
      * @param  array     $event_data
+     * @param  string    $channel
+     * @param  string    $subject
      * @return array
      */
     public function getMessage(array $project, $event_name, array $event_data, $channel, $subject)
@@ -91,6 +109,8 @@ class Zulip extends Base implements NotificationInterface
      * @param  array     $project
      * @param  string    $event_name
      * @param  array     $event_data
+     * @param  string    $channel
+     * @param  string    $subject
      */
     private function sendMessage($webhook, $channel, array $project, $event_name, array $event_data, $api_key, $subject)
     {
