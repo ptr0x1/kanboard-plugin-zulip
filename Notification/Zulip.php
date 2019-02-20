@@ -63,13 +63,7 @@ class Zulip extends Base implements NotificationInterface
             $title = $this->notificationModel->getTitleWithoutAuthor($event_name, $event_data);
         }
 
-        /*
-          Sets message type to stream, sets channel used.
-        */
-        $message = "type=stream\n";
-        $message .= "to=".$channel."\n";
-        $message .= "subject=".$subject."\n";
-        $message = 'content='.'**['.$project['name']."]** ";
+        $message = '**['.$project['name']."]** ";
 
         if ($this->configModel->get('application_url') !== '') {
             $message .= t($event_data['task']['title']."\n");
@@ -81,7 +75,10 @@ class Zulip extends Base implements NotificationInterface
         $message .= $title."\n";
 
         return array(
-            'text' => $message,
+            'type' => "stream",
+            'to' => $channel,
+            'subject' => $subject,
+            'content' => $message,
         );
     }
 
@@ -101,10 +98,6 @@ class Zulip extends Base implements NotificationInterface
         $headers = array(
           'Authorization: Basic '. base64_encode($api_key)
         );
-
-        if (! empty($channel)) {
-            $payload['channel'] = $channel;
-        }
 
         $this->httpClient->postFormAsync($webhook, $payload, $headers);
     }
