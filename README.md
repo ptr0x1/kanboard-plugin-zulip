@@ -34,16 +34,16 @@ Configuration
 
 ### Zulip configuration
 
-- Generate a new webhook url
-- Go to **TODO**
-- You can override the channel later if required
+- Generate a new incoming webhook bot on Zulip (Settings > Your bots)
+- Copy the bot name and API key
 
 ### Kanboard configuration
 
 #### Individual notifications
 
-1. Copy and paste the webhook url into **Integrations > Zulip** in your
+1. Copy and paste the bot name and API key into **Integrations > Zulip** in your
    user profile 
+2. Set the channel and subject name that should be used
 2. Enable Zulip notifications in your user profile or project settings
 3. Enjoy!
 
