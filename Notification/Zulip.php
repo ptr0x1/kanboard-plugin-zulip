@@ -84,10 +84,10 @@ class Zulip extends Base implements NotificationInterface
         $message = '**['.$project['name']."]** ";
 
         if ($this->configModel->get('application_url') !== '') {
-            $message .= t($event_data['task']['title']."\n");
+            $message .= t("[".$event_data['task']['title']."]");
             $message .= '(';
             $message .= $this->helper->url->to('TaskViewController', 'show', array('task_id' => $event_data['task']['id'], 'project_id' => $project['id']), '', true);
-            $message .= ')';
+            $message .= ')'."\n";
         }
 
         $message .= $title."\n";
