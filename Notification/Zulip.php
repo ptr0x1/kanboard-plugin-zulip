@@ -55,9 +55,17 @@ class Zulip extends Base implements NotificationInterface
         $channel = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_channel');
         $api_key = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_botapi');
         $subject = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_subject');
+        $filters = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_eventfilter');
 
         if (! empty($webhook)) {
+          if (! empty($filters)){
+            $filter_array = explode(",", strtolower(trim($filters)));
+            if (in_array(strtolower($event_name), $filter_array)) {
+              $this->sendMessage($webhook, $channel, $project, $event_name, $event_data, $api_key, $subject);
+            }
+          } else {
             $this->sendMessage($webhook, $channel, $project, $event_name, $event_data, $api_key, $subject);
+          }
         }
     }
 

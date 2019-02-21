@@ -42,7 +42,7 @@ Configuration
 #### Individual notifications
 
 1. Copy and paste the bot name and API key into **Integrations > Zulip** in your
-   user profile 
+   user profile
 2. Set the channel and subject name that should be used
 2. Enable Zulip notifications in your user profile or project settings
 3. Enjoy!
@@ -54,3 +54,20 @@ Configuration
 2. Add the channel name (Optional)
 3. Enable Zulip notification in the project
 4. Enjoy!
+
+#### Adding event filters
+
+You might want to filter down the events that trigger a push. You use the optional filter entry for this.
+If no filter is added then every event will trigger a push notification. If you add one (or more) events then ONLY those events will trigger the notification.
+
+To use them, add the filters separated with a comma for example: CREATE,CLOSE
+
+The following events can be added to the filter:
+
+* *task.move.column* - Move a task to another column
+* *task.update* - Task modification
+* *task.create* - Task creation
+* *task.open* - Reopen a task
+* *task.close* - Closing a task
+* *task.assignee_change* - Task assignee change
+* *task.move.swimlane* - Move a task to another swimlane

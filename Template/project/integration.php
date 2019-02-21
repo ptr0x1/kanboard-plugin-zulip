@@ -12,6 +12,9 @@
     <?= $this->form->label(t('Subject'), 'zulip_webhook_subject') ?>
     <?= $this->form->text('zulip_webhook_subject', $values, array(), array('placeholder="subject"')) ?>
 
+    <?= $this->form->label(t('Event filters (Optional)'), 'zulip_webhook_eventfilter') ?>
+    <?= $this->form->text('zulip_webhook_eventfilter', $values, array(), array('placeholder="task.move.column,task.create"')) ?>
+
     <p class="form-help"><a href="https://github.com/ptr0x01/kanboard-plugin-zulip#configuration" target="_blank"><?= t('Help on Zulip integration') ?></a></p>
 
     <div class="form-actions">
