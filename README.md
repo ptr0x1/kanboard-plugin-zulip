@@ -60,7 +60,7 @@ Configuration
 You might want to filter down the events that trigger a push. You use the optional filter entry for this.
 If no filter is added then every event will trigger a push notification. If you add one (or more) events then ONLY those events will trigger the notification.
 
-To use them, add the filters separated with a comma for example: CREATE,CLOSE
+To use them, add the filters separated with a comma for example: task.create,task.move.column
 
 The following events can be added to the filter:
 
