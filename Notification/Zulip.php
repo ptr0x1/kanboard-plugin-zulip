@@ -4,6 +4,7 @@ namespace Kanboard\Plugin\Zulip\Notification;
 
 use Kanboard\Core\Base;
 use Kanboard\Core\Notification\NotificationInterface;
+use Kanboard\Model\TaskModel;
 
 /**
  * Zulip Notification
