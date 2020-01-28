@@ -1,15 +1,16 @@
 <?php
-
 namespace Kanboard\Plugin\Zulip\Notification;
 
 use Kanboard\Core\Base;
 use Kanboard\Core\Notification\NotificationInterface;
+use Kanboard\Model\TaskModel;
 
 /**
  * Zulip Notification
  *
  * @package  notification
  * @author   Peter Fejer
+ * @modified sarangtc
  */
 class Zulip extends Base implements NotificationInterface
 {
@@ -24,9 +25,11 @@ class Zulip extends Base implements NotificationInterface
     public function notifyUser(array $user, $eventName, array $eventData)
     {
         $webhook = $this->userMetadataModel->get($user['id'], 'zulip_webhook_url', $this->configModel->get('zulip_webhook_url'));
-        $channel = $this->userMetadataModel->get($user['id'], 'zulip_webhook_channel');
         $api_key = $this->userMetadataModel->get($user['id'], 'zulip_webhook_botapi');
+        $type = $this->userMetadataModel->get($user['id'], 'zulip_message_type');
+        $channel = $this->userMetadataModel->get($user['id'], 'zulip_webhook_channel');
         $subject = $this->userMetadataModel->get($user['id'], 'zulip_webhook_subject');
+        $email = $this->userMetadataModel->get($user['id'], 'zulip_webhook_email');
         if (! empty($webhook)) {
             if ($eventName === TaskModel::EVENT_OVERDUE) {
                 foreach ($eventData['tasks'] as $task) {
@@ -36,7 +39,7 @@ class Zulip extends Base implements NotificationInterface
                 }
             } else {
                 $project = $this->projectModel->getById($eventData['task']['project_id']);
-                $this->sendMessage($webhook, $channel, $project, $eventName, $eventData, $api_key, $subject);
+                $this->sendMessage($webhook, $channel, $project, $eventName, $eventData, $api_key, $subject, $type, $email);
             }
         }
     }
@@ -52,19 +55,21 @@ class Zulip extends Base implements NotificationInterface
     public function notifyProject(array $project, $event_name, array $event_data)
     {
         $webhook = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_url', $this->configModel->get('zulip_webhook_url'));
-        $channel = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_channel');
         $api_key = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_botapi');
+        $type = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_type');
+        $channel = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_channel');
         $subject = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_subject');
+        $email = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_email');
         $filters = $this->projectMetadataModel->get($project['id'], 'zulip_webhook_eventfilter');
 
         if (! empty($webhook)) {
           if (! empty($filters)){
             $filter_array = explode(",", strtolower(trim($filters)));
             if (in_array(strtolower($event_name), $filter_array)) {
-              $this->sendMessage($webhook, $channel, $project, $event_name, $event_data, $api_key, $subject);
+              $this->sendMessage($webhook, $channel, $project, $event_name, $event_data, $api_key, $subject, $type, $email);
             }
           } else {
-            $this->sendMessage($webhook, $channel, $project, $event_name, $event_data, $api_key, $subject);
+            $this->sendMessage($webhook, $channel, $project, $event_name, $event_data, $api_key, $subject, $type, $email);
           }
         }
     }
@@ -80,7 +85,7 @@ class Zulip extends Base implements NotificationInterface
      * @param  string    $subject
      * @return array
      */
-    public function getMessage(array $project, $event_name, array $event_data, $channel, $subject)
+    public function getMessage(array $project, $event_name, array $event_data, $channel, $subject, $type, $email)
     {
         if ($this->userSession->isLogged()) {
             $author = $this->helper->user->getFullname();
@@ -99,13 +104,23 @@ class Zulip extends Base implements NotificationInterface
         }
 
         $message .= $title."\n";
-
-        return array(
-            'type' => "stream",
-            'to' => $channel,
-            'subject' => $subject,
-            'content' => $message,
-        );
+		
+		if($type == 'private'){
+			$payload = array(
+				'type' => $type,
+				'to' => $email,
+				'content' => $message,
+			);
+		} else {
+			$payload = array(
+				'type' => 'stream',
+				'to' => $channel,
+				'subject' => $subject,
+				'content' => $message,
+			);
+		}
+		
+		return $payload;
     }
 
     /**
@@ -120,9 +135,9 @@ class Zulip extends Base implements NotificationInterface
      * @param  string    $channel
      * @param  string    $subject
      */
-    private function sendMessage($webhook, $channel, array $project, $event_name, array $event_data, $api_key, $subject)
+    private function sendMessage($webhook, $channel, array $project, $event_name, array $event_data, $api_key, $subject, $type, $email)
     {
-        $payload = $this->getMessage($project, $event_name, $event_data, $channel, $subject);
+        $payload = $this->getMessage($project, $event_name, $event_data, $channel, $subject, $type, $email);
         $headers = array(
           'Authorization: Basic '. base64_encode($api_key)
         );
