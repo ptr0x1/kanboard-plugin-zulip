@@ -47,7 +47,7 @@ Configuration
    user profile in the format **BOT_email:API_key**
 3. Set the message type [stream/private]
 * if stream, set the zulip stream and subject name that should be used
-* if private message, set the zulip user email that message should be sent to
+* if private message, set the zulip user email where the message should be sent to
 4. Enable Zulip notifications in your user profile or project settings
 5. Enjoy!
 
