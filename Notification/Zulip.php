@@ -35,7 +35,7 @@ class Zulip extends Base implements NotificationInterface
                 foreach ($eventData['tasks'] as $task) {
                     $project = $this->projectModel->getById($task['project_id']);
                     $eventData['task'] = $task;
-                    $this->sendMessage($webhook, $channel, $project, $eventName, $eventData, $api_key, $subject);
+                    $this->sendMessage($webhook, $channel, $project, $eventName, $eventData, $api_key, $subject, $type, $email);
                 }
             } else {
                 $project = $this->projectModel->getById($eventData['task']['project_id']);
