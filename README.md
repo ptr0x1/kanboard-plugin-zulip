@@ -15,8 +15,10 @@ Author
 Requirements
 ------------
 
-- Kanboard >= 1.0.37
+- Last tested Kanboard version is <=1.2.5 and >= 1.0.37
 - Zulip
+
+The plugin is no longer updated and could run into issues on later Kanboard or Zulip versions if the integration code changes.
 
 Installation
 ------------
